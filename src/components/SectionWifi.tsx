@@ -71,20 +71,15 @@ const SectionWifi = () => {
     <section className="mx-auto flex h-full max-w-md flex-col gap-6 px-4 pb-24 pt-8 text-slate-900">
       <header className="space-y-1">
         <h2 className="text-4xl font-bold leading-tight text-neutral-950">
-          Connecting to WiFi
+          Want to share WiFi?
         </h2>
         <p className="text-base text-neutral-500">
-         Connect and share our property’s WiFi details.
+         {wifi.shareNote}
         </p>
       </header>
 
       <div className="rounded-[32px] border border-slate-200 bg-white px-5 py-6 shadow-sm">
-        <div className="space-y-1 text-center">
-          <p className="text-xl font-semibold text-neutral-900">Want to share WiFi?</p>
-          <p className="text-sm text-neutral-500">{wifi.shareNote}</p>
-        </div>
         <div className="mt-5 flex justify-center">
-          <div className="rounded-3xl border border-slate-200 bg-white p-4">
             {qrDataUrl ? (
               <img src={qrDataUrl} alt="Wi-Fi QR code" className="h-52 w-52 object-contain" />
             ) : (
@@ -92,7 +87,6 @@ const SectionWifi = () => {
                 Generating QR…
               </div>
             )}
-          </div>
         </div>
         <div className="mt-6 space-y-1 text-center text-sm text-neutral-500">
           <div>
