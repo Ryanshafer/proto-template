@@ -12,18 +12,7 @@ import BottomSheet from "./SectionDiscover/BottomSheet";
 import MarkerCard from "./SectionDiscover/MarkerCard";
 // Temporary mock data — replace with backend response or CMS integration.
 import discoverData from "@/data/discover.json";
-
-export type DiscoverCategory = "restaurant" | "beach" | "nightlife" | "activity";
-
-export interface DiscoverLocation {
-  id: string;
-  category: DiscoverCategory;
-  name: string;
-  description: string;
-  latitude: number;
-  longitude: number;
-  address: string;
-}
+import type { DiscoverCategory, DiscoverLocation } from "@/features/types";
 
 const MAP_VIEWPORT_MIN_HEIGHT = "max(32rem, calc(100dvh - 5.5rem))";
 const NAV_SAFE_OFFSET_PX = 0; // Matches ~pb-24 to clear the bottom nav.

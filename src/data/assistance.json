@@ -1,9 +1,10 @@
 {
   "emergency": {
-     "type": "Emergency",
-      "label": "Get Emergency Help",
-      "value": "+112",
-      "action": "tel:+112"
+    "type": "phone",
+    "label": "Get Emergency Help",
+    "value": "+112",
+    "action": "tel:+112",
+    "primary": true
   },
   "contacts": [
     {

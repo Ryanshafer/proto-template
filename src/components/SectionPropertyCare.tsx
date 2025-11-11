@@ -11,6 +11,19 @@ import { Copy } from "lucide-react";
 import propertyCare from "@/data/propertyCare.json";
 import { Button } from "@/components/ui/button";
 import SegmentedControl from "@/components/SegmentedControl";
+import type { PropertyCareCategory } from "@/features/types";
+
+type PropertyAddress = {
+  propertyName: string;
+  line1: string;
+  line2: string;
+  mapUrl?: string;
+};
+
+const propertyCareData = propertyCare as {
+  address: PropertyAddress;
+  categories: PropertyCareCategory[];
+};
 
 const getIcon = (iconName: string) => {
   const registry = LucideIcons as Record<string, unknown>;
@@ -29,18 +42,18 @@ const getIcon = (iconName: string) => {
 };
 
 const SectionPropertyCare = () => {
-  const [activeCategory, setActiveCategory] = useState(propertyCare.categories[0]?.id);
+  const [activeCategory, setActiveCategory] = useState(propertyCareData.categories[0]?.id);
   const [copied, setCopied] = useState(false);
 
   const activeContent = useMemo(
-    () => propertyCare.categories.find((category) => category.id === activeCategory),
+    () => propertyCareData.categories.find((category) => category.id === activeCategory),
     [activeCategory],
   );
 
   const handleCopyAddress = async () => {
     try {
       if (typeof navigator !== "undefined" && navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(`${propertyCare.address.line1}, ${propertyCare.address.line2}`);
+        await navigator.clipboard.writeText(`${propertyCareData.address.line1}, ${propertyCareData.address.line2}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       }
@@ -64,11 +77,11 @@ const SectionPropertyCare = () => {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-slate-500">Property address:</p>
-            <p className="text-xl font-semibold text-neutral-900">{propertyCare.address.propertyName}</p>
+            <p className="text-xl font-semibold text-neutral-900">{propertyCareData.address.propertyName}</p>
             <p className="text-sm text-neutral-500">
-              {propertyCare.address.line1}
+              {propertyCareData.address.line1}
               <br />
-              {propertyCare.address.line2}
+              {propertyCareData.address.line2}
             </p>
           </div>
           <Button
@@ -85,7 +98,7 @@ const SectionPropertyCare = () => {
       </div>
 
       <SegmentedControl
-        options={propertyCare.categories.map((category) => ({
+        options={propertyCareData.categories.map((category) => ({
           id: category.id,
           label: category.label,
         }))}

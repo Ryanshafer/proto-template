@@ -9,6 +9,9 @@ import { MessageCircle, Phone, Mail, Sparkles, Clock, Siren } from "lucide-react
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import assistance from "@/data/assistance.json";
+import type { AssistanceConfig } from "@/features/types";
+
+const assistanceConfig = assistance as AssistanceConfig;
 
 const SectionAssistance = () => {
   return (
@@ -22,19 +25,27 @@ const SectionAssistance = () => {
         </p>
       </header>
 
-      <Button
-        className="h-12 justify-center rounded-full bg-rose-50 text-rose-700 hover:bg-rose-100"
-        variant="secondary"
-        size="lg"
-      >
-        <a href={assistance.emergency?.action ?? "#"} className="flex w-full items-center justify-center gap-2">
-          <Siren className="h-4 w-4" />
-          <span>{assistance.emergency.label} {assistance.emergency.value}</span>
-        </a>
-      </Button>
+      {assistanceConfig.emergency ? (
+        <Button
+          className="h-12 justify-center rounded-full bg-rose-50 text-rose-700 hover:bg-rose-100"
+          variant="secondary"
+          size="lg"
+          asChild
+        >
+          <a
+            href={assistanceConfig.emergency.action}
+            className="flex w-full items-center justify-center gap-2"
+          >
+            <Siren className="h-4 w-4" />
+            <span>
+              {assistanceConfig.emergency.label} {assistanceConfig.emergency.value}
+            </span>
+          </a>
+        </Button>
+      ) : null}
 
       <div className="space-y-5">
-        {assistance.contacts.map((contact) => (
+        {assistanceConfig.contacts.map((contact) => (
           <Card key={contact.id} className="rounded-2xl border border-slate-200 bg-white shadow-lg">
             <CardContent className="space-y-4 px-5 py-6">
               <div className="flex items-start gap-4">
@@ -73,8 +84,8 @@ const SectionAssistance = () => {
                       variant={channel.primary ? "default" : "secondary"}
                       size="lg"
                       className={`h-11 gap-3 rounded-full px-5 text-sm font-semibold ${
-                        channel.type === "whatsapp"
-                          ? "bg-green-300 text-green-950 hover:bg-green-400"
+                        channel.primary
+                          ? "bg-emerald-400 text-emerald-950 hover:bg-emerald-300"
                           : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                       }`}
                     >
@@ -92,6 +103,20 @@ const SectionAssistance = () => {
           </Card>
         ))}
       </div>
+
+      <Card className="border border-dashed border-slate-300 bg-slate-50/80">
+        <CardContent className="space-y-2 px-5 py-4">
+          <div className="flex items-center gap-2 text-slate-500">
+            <Sparkles className="h-4 w-4" />
+            <p className="text-xs uppercase tracking-[0.2em]">Concierge tips</p>
+          </div>
+          <ul className="list-disc space-y-1 pl-4 text-sm text-slate-600">
+            {assistanceConfig.supportTips.map((tip) => (
+              <li key={tip}>{tip}</li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </section>
   );
 };

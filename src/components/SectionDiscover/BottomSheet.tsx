@@ -7,47 +7,21 @@
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, type PanInfo } from "framer-motion";
-import type { DiscoverCategory, DiscoverLocation } from "../SectionDiscover";
+import type {
+  DiscoverCategory,
+  DiscoverLocation,
+  DiscoverLocationDetail,
+} from "@/features/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import MarkerCard from "./MarkerCard";
 import WelcomeMessage from "./WelcomeMessage";
 import type { WelcomeContent } from "./WelcomeMessage";
 import welcomeContent from "@/data/welcome.json";
-import type { DiscoverLocationDetail } from "./types";
 import detailsData from "@/data/discover-details.json";
 import LocationInfo from "./LocationInfo";
 import SegmentedControl from "@/components/SegmentedControl";
-
-const CATEGORY_META: Record<
-  DiscoverCategory,
-  { label: string; helper: string; accent: string; segmentLabel: string }
-> = {
-  restaurant: {
-    label: "Restaurants",
-    helper: "Local kitchens + chef tables",
-    accent: "from-rose-500/80 to-rose-400/50",
-    segmentLabel: "Food",
-  },
-  beach: {
-    label: "Beaches",
-    helper: "Loungers, coves, and calm water",
-    accent: "from-cyan-500/80 to-cyan-400/50",
-    segmentLabel: "Beaches",
-  },
-  nightlife: {
-    label: "Nightlife",
-    helper: "Lounges, DJ pop-ups, cocktail dens",
-    accent: "from-indigo-500/80 to-indigo-400/50",
-    segmentLabel: "Nightlife",
-  },
-  activity: {
-    label: "Activities",
-    helper: "Workshops, markets, and day trips",
-    accent: "from-emerald-500/80 to-emerald-400/50",
-    segmentLabel: "Activities",
-  },
-};
+import { CATEGORY_META, getSegmentActiveClass } from "@/features/categoryMeta";
 
 type BottomSheetProps = {
   groupedMarkers: Record<DiscoverCategory, DiscoverLocation[]>;
@@ -86,15 +60,7 @@ const BottomSheet = ({
     const mapToOption = (key: DiscoverCategory | "all") => ({
       id: key,
       label: key === "all" ? "All" : CATEGORY_META[key as DiscoverCategory].segmentLabel,
-      activeClassName:
-        key === "all"
-          ? "bg-white"
-          : {
-              restaurant: "bg-rose-200",
-              beach: "bg-cyan-200",
-              nightlife: "bg-indigo-200",
-              activity: "bg-emerald-200",
-            }[key as DiscoverCategory] ?? "bg-white",
+      activeClassName: getSegmentActiveClass(key),
     });
     return (["all", ...(Object.keys(CATEGORY_META) as DiscoverCategory[])] as Array<
       DiscoverCategory | "all"
@@ -105,7 +71,7 @@ const BottomSheet = ({
       ? {
           label: "All highlights",
           helper: "Every saved recommendation",
-          accent: "from-neutral-200 to-neutral-200",
+          gradient: "from-neutral-200 to-neutral-200",
           segmentLabel: "All",
         }
       : CATEGORY_META[activeSegment];

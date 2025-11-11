@@ -6,8 +6,9 @@
  * - Move map state management into a context provider if global state is needed.
  */
 import { useEffect, useState } from "react";
-import type { DiscoverLocation } from "../SectionDiscover";
+import type { DiscoverLocation } from "@/features/types";
 import { AlertTriangle, MapPin } from "lucide-react";
+import { getMarkerClasses } from "@/features/categoryMeta";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -29,13 +30,6 @@ if (import.meta.env.DEV) {
   // eslint-disable-next-line no-console
   console.log("PUBLIC_MAPBOX_TOKEN present:", Boolean(import.meta.env.PUBLIC_MAPBOX_TOKEN));
 }
-
-const categoryAccent: Record<DiscoverLocation["category"], string> = {
-  restaurant: "bg-rose-500 border-rose-100 text-white",
-  beach: "bg-cyan-500 border-cyan-100 text-white",
-  nightlife: "bg-indigo-500 border-indigo-100 text-white",
-  activity: "bg-emerald-500 border-emerald-100 text-white",
-};
 
 const MapView = ({ markers, selectedMarkerId, onMarkerSelect }: MapViewProps) => {
   const [mapKit, setMapKit] = useState<{
@@ -138,7 +132,7 @@ if (!Map || !Marker) {
     >
       {markers.map((marker) => {
         const isActive = marker.id === selectedMarkerId;
-        const palette = categoryAccent[marker.category] ?? "bg-slate-900";
+        const palette = getMarkerClasses(marker.category);
         return (
           <Marker
             key={marker.id}

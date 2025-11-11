@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import type { DiscoverLocationDetail } from "./types";
+import type { DiscoverLocationDetail } from "@/features/types";
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 

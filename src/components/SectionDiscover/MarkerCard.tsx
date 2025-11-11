@@ -6,7 +6,10 @@
  * - Move map state management into a context provider if global state is needed.
  */
 import { AnimatePresence, motion } from "framer-motion";
-import type { DiscoverLocation } from "../SectionDiscover";
+import type {
+  DiscoverLocation,
+  DiscoverLocationDetail,
+} from "@/features/types";
 import {
   Card,
   CardContent,
@@ -17,7 +20,6 @@ import {
 import { ArrowLeft, X } from "lucide-react";
 import detailsData from "@/data/discover-details.json";
 import LocationInfo from "./LocationInfo";
-import type { DiscoverLocationDetail } from "./types";
 
 type MarkerCardProps = {
   marker: DiscoverLocation | null;
