@@ -8,4 +8,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   integrations: [react()],
+  site: "https://ryanshafer.github.io/proto-local-guide/",
+  base: "/proto-local-guide/",
 });
