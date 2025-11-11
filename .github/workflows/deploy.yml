@@ -37,5 +37,4 @@ jobs:
       - name: Deploy
         uses: withastro/action@v2
         with:
-          path: dist
           package-manager: npm
