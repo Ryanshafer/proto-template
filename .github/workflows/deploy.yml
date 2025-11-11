@@ -38,4 +38,3 @@ jobs:
         uses: withastro/action@v2
         with:
           path: dist
-          branch: gh-pages
