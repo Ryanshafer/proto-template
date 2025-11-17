@@ -83,7 +83,7 @@ const AppShell = () => {
         <div className="stack-md text-center">
           <p className="text-label-xs text-muted-foreground tracking-widest uppercase">Astro · React · shadcn/ui</p>
           <h1 className="text-display-lg leading-display-lg tracking-display-lg text-foreground">Your sandbox is ready.</h1>
-          <p className="text-body-lg text-muted-foreground mx-auto max-w-2xl">
+          <p className="text-body-lg text-lime-500 mx-auto max-w-2xl">
             Use this page as a starting point for prototyping. Swap the theme, design in Figma using tailwind tokens, and then
             use Figma MCP and your AI of choice to build out realistic UI and flows.
           </p>
