@@ -69,9 +69,8 @@ jobs:
         run: |
           set -e
 
-          git pull --rebase https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages || true
-
           cd gh-pages
+          git pull --rebase origin gh-pages || true
 
           # Determine target
           if [ -z "$TARGET_FOLDER" ]; then
