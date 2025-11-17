@@ -41,24 +41,18 @@ jobs:
         run: npm test --if-present
 
       - name: Configure site/base env
+        id: base
         env:
           TARGET_FOLDER: ${{ github.event.inputs.targetFolder }}
-          REPO: ${{ github.repository }}
         run: |
-          OWNER="${REPO%%/*}"
-          NAME="${REPO##*/}"
           TARGET="$TARGET_FOLDER"
-
           if [ -z "$TARGET" ]; then
-            BASE_PATH="/${NAME}/"
-            SITE_URL="https://${OWNER}.github.io/${NAME}/"
+            echo "ASTRO_BASE=/proto-local-guide/" >> $GITHUB_ENV
+            echo "ASTRO_SITE=https://ryanshafer.github.io/proto-local-guide/" >> $GITHUB_ENV
           else
-            BASE_PATH="/${NAME}/${TARGET}/"
-            SITE_URL="https://${OWNER}.github.io/${NAME}/${TARGET}/"
+            echo "ASTRO_BASE=/proto-local-guide/${TARGET}/" >> $GITHUB_ENV
+            echo "ASTRO_SITE=https://ryanshafer.github.io/proto-local-guide/${TARGET}/" >> $GITHUB_ENV
           fi
-
-          echo "ASTRO_BASE=${BASE_PATH}" >> $GITHUB_ENV
-          echo "ASTRO_SITE=${SITE_URL}" >> $GITHUB_ENV
 
       - name: Build
         run: npm run build
