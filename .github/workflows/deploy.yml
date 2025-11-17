@@ -73,21 +73,23 @@ jobs:
 
           cd gh-pages
 
+          # Determine target
           if [ -z "$TARGET_FOLDER" ]; then
-            # Deploy to root of gh-pages
-            rm -rf ./* .[^.]*
-            cp -R ../dist/* .
-            touch .nojekyll
+            TARGET="."
           else
-            # Deploy to custom folder
-            rm -rf "$TARGET_FOLDER"
-            mkdir -p "$TARGET_FOLDER"
-            cp -R ../dist/* "$TARGET_FOLDER"/
-            touch "$TARGET_FOLDER/.nojekyll"
+            TARGET="$TARGET_FOLDER"
+            rm -rf "$TARGET"
+            mkdir -p "$TARGET"
           fi
+
+          # Copy only the contents of dist into the target using rsync
+          rsync -av --delete ../dist/ "$TARGET"/
+
+          # Ensure GitHub Pages works
+          touch "$TARGET/.nojekyll"
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Deploy to ${TARGET_FOLDER:-root}"
+          git commit -m "Deploy to ${TARGET_FOLDER:-root}" || true
           git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:refs/heads/gh-pages
