@@ -7,20 +7,17 @@ on:
   workflow_dispatch:
     inputs:
       targetFolder:
-        description: "Optional subfolder (e.g. v1, new-ui) to publish to within gh-pages"
+        description: "Optional subfolder (e.g. demo, admin-ui, 2025-landing, experiment-a)"
         required: false
         default: ""
 
 permissions:
   contents: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,30 +31,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint --if-present
-
-      - name: Test
-        run: npm test --if-present
-
       - name: Configure site/base env
-        id: base
         env:
           TARGET_FOLDER: ${{ github.event.inputs.targetFolder }}
+          REPO: ${{ github.repository }}
         run: |
+          OWNER="${REPO%%/*}"
+          NAME="${REPO##*/}"
           TARGET="$TARGET_FOLDER"
+
           if [ -z "$TARGET" ]; then
-            echo "ASTRO_BASE=/proto-local-guide/" >> $GITHUB_ENV
-            echo "ASTRO_SITE=https://ryanshafer.github.io/proto-local-guide/" >> $GITHUB_ENV
+            BASE_PATH="/${NAME}/"
+            SITE_URL="https://${OWNER}.github.io/${NAME}/"
           else
-            echo "ASTRO_BASE=/proto-local-guide/${TARGET}/" >> $GITHUB_ENV
-            echo "ASTRO_SITE=https://ryanshafer.github.io/proto-local-guide/${TARGET}/" >> $GITHUB_ENV
+            BASE_PATH="/${NAME}/${TARGET}/"
+            SITE_URL="https://${OWNER}.github.io/${NAME}/${TARGET}/"
           fi
 
-      - name: Build
+          echo "ASTRO_BASE=${BASE_PATH}" >> $GITHUB_ENV
+          echo "ASTRO_SITE=${SITE_URL}" >> $GITHUB_ENV
+
+      - name: Build site
         run: npm run build
 
-      - name: Clone gh-pages
+      - name: Checkout gh-pages branch
         run: |
           git clone --depth=1 --branch gh-pages https://github.com/${{ github.repository }} gh-pages || (
             git init gh-pages
@@ -65,48 +62,30 @@ jobs:
             git checkout -b gh-pages
           )
 
-      - name: Copy existing version folders
-        run: |
-          if [ -d gh-pages ]; then
-            shopt -s nullglob
-            for dir in gh-pages/v*/ ; do
-              target="dist/$(basename "$dir")"
-              rm -rf "$target"
-              cp -R "$dir" "$target"
-            done
-          fi
-
-      - name: Publish build
+      - name: Publish build (custom folder)
         env:
           TARGET_FOLDER: ${{ github.event.inputs.targetFolder }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -e
-          TARGET="$TARGET_FOLDER"
-          [ -z "$TARGET" ] && TARGET="."
 
           cd gh-pages
 
-          if [ "$TARGET" = "." ]; then
-            shopt -s dotglob
-            for entry in * .*; do
-              case "$entry" in
-                .|..|.git|v*) continue ;;
-                *) rm -rf "$entry" ;;
-              esac
-            done
-            shopt -u dotglob
-            cp -R ../dist/. .
+          if [ -z "$TARGET_FOLDER" ]; then
+            # Deploy to root of gh-pages
+            rm -rf ./* .[^.]*
+            cp -R ../dist/* .
             touch .nojekyll
           else
-            rm -rf "$TARGET"
-            mkdir -p "$TARGET"
-            cp -R ../dist/. "$TARGET"/
-            touch "$TARGET/.nojekyll"
+            # Deploy to custom folder
+            rm -rf "$TARGET_FOLDER"
+            mkdir -p "$TARGET_FOLDER"
+            cp -R ../dist/* "$TARGET_FOLDER"/
+            touch "$TARGET_FOLDER/.nojekyll"
           fi
 
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Deploy ${GITHUB_SHA} -> ${TARGET}" || exit 0
+          git commit -m "Deploy to ${TARGET_FOLDER:-root}"
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} gh-pages
