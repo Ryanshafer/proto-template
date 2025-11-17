@@ -19,11 +19,23 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {
-      include: ["lucide-react", "clsx", "tailwind-merge"],
+      include: [
+        "lucide-react",
+        "clsx",
+        "tailwind-merge",
+        "class-variance-authority",
+        "@radix-ui/react-slot",
+      ],
     },
   },
   ssr: {
-    noExternal: ["lucide-react", "clsx", "tailwind-merge"],
+    noExternal: [
+      "lucide-react",
+      "clsx",
+      "tailwind-merge",
+      "class-variance-authority",
+      "@radix-ui/react-slot",
+    ],
   },
   integrations: [react()],
   site: SITE_URL,
