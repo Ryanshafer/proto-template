@@ -34,6 +34,7 @@ Need another primitive? Run `npx shadcn@latest add <component>` and it will land
 - Keep shared UI primitives inside `src/components` (remember not to modify anything under `src/components/ui` so shadcn updates remain painless).
 - Store any mock JSON that powers your prototype inside the root-level `data/` directory so it mirrors the shape of your eventual API responses.
 - When UI comes from Figma, fetch the referenced nodes via the Figma MCP command before coding so you can mirror spacing, typography, and icon choices accurately.
+- Import `data/figma-tailwind-variables.json` into Figma Variables so spacing + border radii align with the Tailwind utilities baked into this template.
 
 ## Theme swapping
 

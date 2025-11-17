@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ThemeToggle from "../components/ThemeToggle";
 ---
 
 <BaseLayout
@@ -9,17 +10,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   showHeader={false}
   showFooter={false}
 >
+<!-- You may delete this markup once you start building your own prototype. -->
   <section slot="main" class="px-page pb-page pt-16">
     <div class="page-shell stack-xl">
-      <div class="flex flex-col items-center justify-between gap-4 rounded-full border border-border/60 px-4 py-2 text-sm text-muted-foreground sm:flex-row">
-        <p>Preview light and dark modes while you theme.</p>
-        <button
-          class="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 font-semibold transition hover:border-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-          data-theme-toggle
-          type="button"
-        >
-          Toggle Theme
-        </button>
+      <div class="flex flex-col items-end gap-4 sm:flex-row sm:justify-end">
+        <ThemeToggle client:load />
       </div>
       <div class="stack-md text-center">
         <p class="text-label-xs text-muted-foreground tracking-widest uppercase">Astro · React · shadcn/ui</p>
@@ -74,7 +69,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </p>
           <ul class="space-y-2 text-body-sm text-muted-foreground">
             <li>🎯 Map icons to Lucide equivalents.</li>
-            <li>📥 Import `data/figma-tailwind-classes.json` `data/figma-tailwind-colors.json` into Figma variables so spacing + radii match Tailwind.</li>
+            <li>📥 Import `data/figma-tailwind-variables.json` into Figma Variables so spacing + radii match Tailwind.</li>
             <li>🧱 Check `src/components/ui` for existing shadcn primitives.</li>
             <li>➕ Need more? Run `npx shadcn@latest add &lt;component&gt;`.</li>
           </ul>
@@ -99,26 +94,3 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </div>
   </section>
 </BaseLayout>
-<script is:inline>
-  const root = document.documentElement;
-  const toggleButton = document.querySelector("[data-theme-toggle]");
-
-  const applyStoredPreference = () => {
-    if (localStorage.getItem("prefers-dark") === "true") {
-      root.classList.add("dark");
-    }
-  };
-
-  const toggleTheme = () => {
-    if (root.classList.contains("dark")) {
-      root.classList.remove("dark");
-      localStorage.removeItem("prefers-dark");
-    } else {
-      root.classList.add("dark");
-      localStorage.setItem("prefers-dark", "true");
-    }
-  };
-
-  applyStoredPreference();
-  toggleButton?.addEventListener("click", toggleTheme);
-</script>
