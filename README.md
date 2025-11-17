@@ -58,6 +58,10 @@ Need another primitive? Run `npx shadcn@latest add <component>` and it will land
 - Update `site` and `base` inside `astro.config.mjs` to match your GitHub Pages URL (defaults mirror this repo’s slug). The deploy workflow will override them via `ASTRO_SITE`/`ASTRO_BASE` when needed, so only change the defaults if your production host lives elsewhere.
 - If you change repository names, branches, or hosting targets, tweak `.github/workflows/deploy.yml` accordingly so CI continues to publish on every push to `main`.
 - Run `npm run build` before committing major layout or routing changes to make sure Astro + Vite compilation still succeeds. Use `npm run preview` to inspect the production build locally.
+- GitHub setup checklist (one-time per repo):
+  - `Settings → Actions → General → Workflow permissions`: switch to **Read and write permissions** so the workflow can push to `gh-pages`.
+  - `Settings → Pages`: select **GitHub Actions** as the source (or choose “Deploy from branch → gh-pages / root” if you prefer the legacy flow).
+  - Confirm Pages is enabled so the `pages-build-deployment` workflow can publish the artifacts uploaded by our `Deploy Astro site to gh-pages` job.
 
 ### Versioned GitHub Pages deploys
 
